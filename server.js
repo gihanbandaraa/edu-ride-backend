@@ -10,6 +10,8 @@ const port = process.env.PORT || 3000
 const testRoutes = require('./routes/test.routes')
 const usersRoutes = require('./routes/users.routes')
 const driversRoutes = require('./routes/drivers.routes')
+const studentsRoutes = require('./routes/students.routes')
+const parentsRoutes = require('./routes/parents.routes')
 
 
 const dir = path.join(__dirname, 'uploads');
@@ -24,6 +26,8 @@ app.use('/uploads', express.static('uploads'))
 app.use('/api/test', testRoutes)
 app.use('/api/users', usersRoutes)
 app.use('/api/drivers', driversRoutes)
+app.use('/api/students', studentsRoutes)
+app.use('/api/parents', parentsRoutes)
 
 
 app.get('/', (req, res) => {

@@ -89,6 +89,28 @@ const getVerificationStatus = async (req, res) => {
     }
 };
 
+const update_parent_push_token = async (req, res) => {
+    const {user_id, push_token} = req.body;
+
+    if (!user_id || !push_token) {
+        return res.status(400).json({error: "User ID and push token are required"});
+    }
+    try {
+        const query = "UPDATE parents SET expo_push_token = ? WHERE user_id = ?";
+        const params = [push_token, user_id];
+        const result = await executeQuery(query, params);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({error: "Parent not found"});
+        }
+        console.log(`Push token updated for user_id: ${user_id}`);
+        res.status(200).json({message: "Push token updated successfully"});
+    } catch (error) {
+        console.error("Error updating push token:", error);
+        res.status(500).json({error: "Error updating push token"});
+    }
+};
+
+
 const test = async (req, res) => {
     res.status(200).json({message: 'Test successful'});
 };
@@ -97,5 +119,6 @@ module.exports = {
     addUser,
     loginUser,
     getVerificationStatus,
+    update_parent_push_token,
     test
 };

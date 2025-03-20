@@ -4,45 +4,87 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f3a2786b-477f-4a35-803c-da501d53f426" name="Changes" comment="" />
+    <list default="true" id="f3a2786b-477f-4a35-803c-da501d53f426" name="Changes" comment="initialize backend structure with database connection, routing, and file upload functionality">
+      <change afterPath="$PROJECT_DIR$/controllers/parents.controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/controllers/students.controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/parents.routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/students.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f6fd38c9-d21b-4366-8e68-f79bd248dd79.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f6fd38c9-d21b-4366-8e68-f79bd248dd79.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/drivers.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/drivers.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/users.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/users.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/drivers.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/drivers.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/1742119701888-939576988-selfie.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/1742119702039-728272598-nic.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/1742119702079-190459666-license.jpg" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;gihanbandaraa&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/gihanbandaraa/edu-ride-backend.git&quot;,
+    &quot;accountId&quot;: &quot;059757e3-3c29-4779-b655-1d0d93f91c0e&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2uIvJwkm1zzUQVsBsEbiEB6344W" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Node.js.users.controller.js.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;20.14.0&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;20.14.15&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Education/Degree/Final Project/Application/edu-ride-backend/utils&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.2.4\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Node.js.users.controller.js.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "master",
+    "javascript.nodejs.core.library.configured.version": "20.14.0",
+    "javascript.nodejs.core.library.typings.version": "20.14.15",
+    "last_opened_file_path": "D:/Education/Degree/Final Project/Application/edu-ride-backend/controllers",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "node",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "editor.preferences.inline.completion",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.2.4\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Education\Degree\Final Project\Application\edu-ride-backend\controllers" />
       <recent name="D:\Education\Degree\Final Project\Application\edu-ride-backend\utils" />
     </key>
   </component>
@@ -59,7 +101,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-WS-243.24978.60" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-WS-243.26053.12" />
       </set>
     </attachedChunks>
   </component>
@@ -77,10 +119,31 @@
       <workItem from="1742053739571" duration="2249000" />
       <workItem from="1742093057141" duration="594000" />
       <workItem from="1742095546970" duration="19245000" />
+      <workItem from="1742180304567" duration="4836000" />
+      <workItem from="1742219698808" duration="11050000" />
+      <workItem from="1742266667493" duration="12918000" />
+      <workItem from="1742353435528" duration="788000" />
+      <workItem from="1742356753951" duration="13255000" />
+      <workItem from="1742391348906" duration="1384000" />
+      <workItem from="1742393880592" duration="7728000" />
+      <workItem from="1742445999932" duration="3922000" />
     </task>
+    <task id="LOCAL-00001" summary="initialize backend structure with database connection, routing, and file upload functionality">
+      <option name="closed" value="true" />
+      <created>1742180705556</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1742180705556</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initialize backend structure with database connection, routing, and file upload functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="initialize backend structure with database connection, routing, and file upload functionality" />
   </component>
 </project>
