@@ -1,16 +1,15 @@
 const executeQuery = require('../utils/executeQuery');
-const Tesseract = require('tesseract.js');
-
 const path = require('path');
-const extractTextFromImage = async (imagePath) => {
-    try {
-        const { data: { text } } = await Tesseract.recognize(imagePath, 'eng');
-        return text;
-    } catch (error) {
-        console.error('Error extracting text from image:', error);
-        throw error;
+const moment = require('moment-timezone');
+
+class TripSummary {
+    constructor(date, morningCount, afternoonCount) {
+        this.date = date;
+        this.morningCount = morningCount;
+        this.afternoonCount = afternoonCount;
     }
-};
+}
+
 const addDriver = async (req, res) => {
     try {
         const {
@@ -41,20 +40,6 @@ const addDriver = async (req, res) => {
         const selfie_url = selfieFile.path;
         const nic_image_url = nicFile.path;
         const license_image_url = licenseFile.path;
-
-        // Extract text from NIC and license images
-        const nicText = await extractTextFromImage(nic_image_url);
-        const licenseText = await extractTextFromImage(license_image_url);
-
-        // Validate NIC and License numbers
-        if (!nicText.includes(nic_number) || !licenseText.includes(license_num)) {
-            console.log("NIC Text:", nicText);
-            console.log("License Text:", licenseText);
-            return res.status(400).json({ error: "NIC or License number does not match the provided values" });
-        } else {
-            console.log("NIC and License numbers match the provided values");
-        }
-
 
         // Default verification flags
         const is_verified = false;
@@ -108,6 +93,65 @@ const getDriverDetails = async (req, res) => {
     }
 };
 
+const getTripSummaries = async (req, res) => {
+    const driverId = req.params.driverId;
+    if (!driverId) {
+        return res.status(400).json({ error: "Driver ID is required" });
+    }
+
+    try {
+        const query = `
+            SELECT date,
+                   SUM(CASE WHEN morning_attendance_status = 'present' THEN 1 ELSE 0 END) as morningCount,
+                   SUM(CASE WHEN afternoon_attendance_status = 'present' THEN 1 ELSE 0 END) as afternoonCount
+            FROM attendance
+            WHERE student_id IN (
+                SELECT s.id
+                FROM students s
+                WHERE s.driver_id = 1
+            )
+            GROUP BY date
+            ORDER BY date DESC
+        `;
+
+        const results = await executeQuery(query, [driverId]);
+        const tripSummaries = results.map(row => new TripSummary(row.date, row.morningCount, row.afternoonCount));
+
+        res.status(200).json(tripSummaries);
+    } catch (error) {
+        console.error("Error retrieving trip summaries:", error);
+        res.status(500).json({ error: "Error retrieving trip summaries" });
+    }
+};
+
+const getTripDetails = async (req, res) => {
+    const { driverId, date } = req.params;
+    if (!driverId || !date) {
+        return res.status(400).json({ error: "Driver ID and date are required" });
+    }
+
+    try {
+        const query = `
+            SELECT s.full_name as studentName, a.morning_attendance_status, a.afternoon_attendance_status
+            FROM attendance a
+            JOIN students s ON a.student_id = s.id
+            WHERE s.driver_id = ? AND DATE(a.date) = ?
+        `;
+
+        const localDate = moment(date).tz('Asia/Colombo').format('YYYY-MM-DD');
+
+        const results = await executeQuery(query, [driverId, localDate]);
+        if (results.length === 0) {
+            return res.status(404).json({ error: "No trip details found" });
+        }
+
+        res.status(200).json(results);
+    } catch (error) {
+        console.error("Error retrieving trip details:", error);
+        res.status(500).json({ error: "Error retrieving trip details" });
+    }
+};
 
 
-module.exports = { addDriver , getDriverDetails};
+
+module.exports = { addDriver , getDriverDetails , getTripSummaries , getTripDetails };

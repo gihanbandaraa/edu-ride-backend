@@ -3,6 +3,8 @@ const cors = require('cors')
 const database = require('./utils/database')
 const fs = require('fs');
 const path = require('path');
+const cronJobs = require('./controllers/cronjobs')
+
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -13,6 +15,7 @@ const driversRoutes = require('./routes/drivers.routes')
 const studentsRoutes = require('./routes/students.routes')
 const parentsRoutes = require('./routes/parents.routes')
 
+cronJobs.updatePaymentsForNewMonth();
 
 const dir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(dir)) {

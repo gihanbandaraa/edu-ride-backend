@@ -5,24 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f3a2786b-477f-4a35-803c-da501d53f426" name="Changes" comment="initialize backend structure with database connection, routing, and file upload functionality">
-      <change afterPath="$PROJECT_DIR$/controllers/parents.controller.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/controllers/students.controller.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/parents.routes.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/students.routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/imageVerification.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f6fd38c9-d21b-4366-8e68-f79bd248dd79.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f6fd38c9-d21b-4366-8e68-f79bd248dd79.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/drivers.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/drivers.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/users.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/users.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/students.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/students.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware/uploadMiddleware.js" beforeDir="false" afterPath="$PROJECT_DIR$/middleware/uploadMiddleware.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/drivers.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/drivers.routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/users.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/1742119701888-939576988-selfie.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/1742119702039-728272598-nic.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/1742119702079-190459666-license.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +35,10 @@
     &quot;accountId&quot;: &quot;059757e3-3c29-4779-b655-1d0d93f91c0e&quot;
   }
 }</component>
+  <component name="MigrationScriptOptions">
+    <option name="ignoreImplicitObjects" value="true" />
+    <option name="ignoreSourceCode" value="false" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
   </component>
@@ -56,32 +51,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Node.js.users.controller.js.executor": "Debug",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "master",
-    "javascript.nodejs.core.library.configured.version": "20.14.0",
-    "javascript.nodejs.core.library.typings.version": "20.14.15",
-    "last_opened_file_path": "D:/Education/Degree/Final Project/Application/edu-ride-backend/controllers",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_interpreter_path": "node",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.inline.completion",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.2.4\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.users.controller.js.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;20.14.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;20.14.15&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Education/Degree/Final Project/Application/edu-ride-backend/controllers&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.inline.completion&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.2.4\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Education\Degree\Final Project\Application\edu-ride-backend\controllers" />
@@ -127,6 +122,10 @@
       <workItem from="1742391348906" duration="1384000" />
       <workItem from="1742393880592" duration="7728000" />
       <workItem from="1742445999932" duration="3922000" />
+      <workItem from="1742452094719" duration="978000" />
+      <workItem from="1742456944673" duration="8289000" />
+      <workItem from="1742487139642" duration="1832000" />
+      <workItem from="1742535704025" duration="5081000" />
     </task>
     <task id="LOCAL-00001" summary="initialize backend structure with database connection, routing, and file upload functionality">
       <option name="closed" value="true" />
