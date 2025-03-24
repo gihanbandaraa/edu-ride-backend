@@ -39,3 +39,6 @@ npm-debug.*
 *.orig.*
 web-build/
 expo-env.d.ts
+
+uploads/
+uploads/*

@@ -7,7 +7,6 @@ const addUser = async (req, res) => {
     if (!name || !email || !password || !role) {
         return res.status(400).json({error: "Name, email, password, and role are required"});
     }
-
     try {
         const password_hash = await bcrypt.hash(password, 10);
 
@@ -28,11 +27,9 @@ const addUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     const {email, password} = req.body;
-
     if (!email || !password) {
         return res.status(400).json({error: "Email and password are required"});
     }
-
     try {
         const query = "SELECT * FROM users WHERE email = ?";
         const params = [email];
@@ -41,24 +38,20 @@ const loginUser = async (req, res) => {
         if (results.length === 0) {
             return res.status(401).json({error: "Invalid email or password"});
         }
-
         const user = results[0];
         if (!user.password_hash) {
             return res.status(401).json({error: "Invalid email or password"});
         }
-
         const passwordMatch = await bcrypt.compare(password, user.password_hash);
 
         if (!passwordMatch) {
             return res.status(401).json({error: "Invalid email or password"});
         }
-
         res.status(200).json({
             message: "Login successful",
             verification_status: user.verification_status,
             userId: user.id
         });
-
     } catch (error) {
         console.error("Error logging in:", error);
         res.status(500).json({error: "Error logging in"});

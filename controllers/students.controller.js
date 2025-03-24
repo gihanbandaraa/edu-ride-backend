@@ -319,7 +319,6 @@ const visualizePayments = async (req, res) => {
         `;
         const params = [driver_id];
         const results = await executeQuery(query, params);
-        console.log(results);
         res.status(200).json(results);
     } catch (err) {
         console.error("Error in visualizePayments:", err);

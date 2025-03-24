@@ -14,6 +14,7 @@ const usersRoutes = require('./routes/users.routes')
 const driversRoutes = require('./routes/drivers.routes')
 const studentsRoutes = require('./routes/students.routes')
 const parentsRoutes = require('./routes/parents.routes')
+const adminsRoutes = require('./routes/admins.routes')
 
 cronJobs.updatePaymentsForNewMonth();
 
@@ -31,6 +32,7 @@ app.use('/api/users', usersRoutes)
 app.use('/api/drivers', driversRoutes)
 app.use('/api/students', studentsRoutes)
 app.use('/api/parents', parentsRoutes)
+app.use('/api/admins', adminsRoutes)
 
 
 app.get('/', (req, res) => {
