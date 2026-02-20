@@ -1,9 +1,14 @@
 const executeQuery = require("../utils/executeQuery");
 const cron = require("node-cron");
 
-
 const updatePaymentsForNewMonth = async () => {
     try {
+        const today = new Date();
+        if (today.getDate() !== 1) {
+            console.log('Not the first day of the month, skipping payment update');
+            return;
+        }
+
         const updateQuery = `
             UPDATE payments
             SET status   = 'unpaid',
@@ -16,8 +21,13 @@ const updatePaymentsForNewMonth = async () => {
         console.error('Error updating payments for the new month:', err);
     }
 };
+const job = cron.schedule('0 0 1 * *', updatePaymentsForNewMonth, {
+    scheduled: true,
+    timezone: "UTC"
+});
 
-// Schedule the job to run at midnight on the first day of every month
-cron.schedule('0 0 1 * *', updatePaymentsForNewMonth);
 
-module.exports = { updatePaymentsForNewMonth };
+module.exports = {
+    updatePaymentsForNewMonth,
+    paymentUpdateJob: job
+};

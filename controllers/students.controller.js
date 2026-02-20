@@ -24,7 +24,177 @@ const sendSMS = (to, message) => {
         .then((message) => console.log('Message sent with SID:', message.sid))
         .catch((error) => console.error('Error sending SMS:', error));
 };
+const sendRideStatusEmail = async (studentId, rideStatus, period) => {
+    try {
+        // Get parent and student details
+        const query = `
+            SELECT p.email, p.full_name AS parent_name, s.full_name AS student_name, s.school
+            FROM students s
+                     JOIN parents p ON s.parent_id = p.id
+            WHERE s.id = ?
+        `;
+        const results = await executeQuery(query, [studentId]);
 
+        if (results.length === 0) {
+            console.error("Student or parent not found for ID:", studentId);
+            return;
+        }
+
+        const {email, parent_name, student_name, school} = results[0];
+
+        // Create email content based on ride status
+        const timeOfDay = period === 'MORNING' ? 'morning' : 'afternoon';
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+
+        let subject, heading, content, accentColor;
+
+        if (rideStatus === 'PICKED_UP') {
+            subject = `${student_name} has been picked up - ${timeString}`;
+            heading = "School Pickup Notification";
+            content = `Your child has been picked up and is on the way to school.`;
+            accentColor = "#27ae60"; // green
+        } else if (rideStatus === 'DROPPED') {
+            subject = `${student_name} has been dropped off - ${timeString}`;
+            heading = "School Drop-off Notification";
+            content = period === 'MORNING'
+                ? `Your child has been safely dropped off at school.`
+                : `Your child has been safely dropped off at the designated location.`;
+            accentColor = "#3498db"; // blue
+        } else {
+            console.log(`No email sent for status: ${rideStatus}`);
+            return; // Don't send email for other statuses
+        }
+
+        // Use the existing transporter from the top-level scope
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: edu_ride_email,
+                pass: edu_ride_password
+            }
+        });
+
+        // Send email
+        const mailOptions = {
+            from: `"EduRide" <${edu_ride_email}>`,
+            to: email,
+            subject: subject,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+                    <div style="text-align: center; margin: 20px 0;">
+                        <h1 style="color: #2c3e50; margin: 0;">${heading}</h1>
+                        <p style="color: #7f8c8d;">EduRide - Your Trusted School Transportation Partner</p>
+                    </div>
+                    <p style="color: #34495e; font-size: 16px;">Dear ${parent_name},</p>
+                    <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 5px; border-left: 4px solid ${accentColor};">
+                        <p style="margin: 5px 0; color: #2c3e50;"><strong>${content}</strong></p>
+                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Student:</strong> ${student_name}</p>
+                        <p style="margin: 5px 0; color: #2c3e50;"><strong>School:</strong> ${school}</p>
+                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Time:</strong> ${timeString}</p>
+                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Period:</strong> ${timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)}</p>
+                    </div>
+                    <p style="color: #34495e; font-size: 16px;">This is an automated notification to keep you informed about your child's transportation status.</p>
+                    <hr style="border: 1px solid #eee; margin: 20px 0;">
+                    <div style="color: #7f8c8d; font-size: 12px; text-align: center;">
+                        <p>This is an automated message from EduRide. Please do not reply to this email.</p>
+                        <p style="margin-top: 15px;">
+                            © ${new Date().getFullYear()} EduRide. All rights reserved.<br>
+                            <a href="https://eduride.com/privacy" style="color: #7f8c8d;">Privacy Policy</a> |
+                            <a href="https://eduride.com/terms" style="color: #7f8c8d;">Terms of Service</a>
+                        </p>
+                    </div>
+                </div>
+            `
+        };
+        // Use await to properly handle errors and ensure email is sent before function completes
+        await transporter.sendMail(mailOptions);
+        return true;
+    } catch (error) {
+        console.error("Error sending ride status email:", error);
+        return false;
+    }
+};
+const sendAbsenceNotificationEmail = async (studentId, period) => {
+    try {
+        // Get parent and student details
+        const query = `
+            SELECT p.email, p.full_name AS parent_name, s.full_name AS student_name, s.school
+            FROM students s
+                     JOIN parents p ON s.parent_id = p.id
+            WHERE s.id = ?
+        `;
+        const results = await executeQuery(query, [studentId]);
+
+        if (results.length === 0) {
+            console.error("Student or parent not found for ID:", studentId);
+            return false;
+        }
+
+        const {email, parent_name, student_name, school} = results[0];
+        const timeOfDay = period === 'MORNING' ? 'morning' : 'afternoon';
+        const now = new Date();
+        const dateString = now.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Create transporter
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: edu_ride_email,
+                pass: edu_ride_password
+            }
+        });
+
+        // Send email
+        const mailOptions = {
+            from: `"EduRide" <${edu_ride_email}>`,
+            to: email,
+            subject: `Absence Notification - ${student_name} (${dateString})`,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+                    <div style="text-align: center; margin: 20px 0;">
+                        <h1 style="color: #2c3e50; margin: 0;">Student Absence Notification</h1>
+                        <p style="color: #7f8c8d;">EduRide - Your Trusted School Transportation Partner</p>
+                    </div>
+                    <p style="color: #34495e; font-size: 16px;">Dear ${parent_name},</p>
+                    <p style="color: #34495e; font-size: 16px;">This is to inform you that your child, ${student_name}, has been marked as absent for today's ${timeOfDay} school transport.</p>
+                    <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 5px; border-left: 4px solid #e74c3c;">
+                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Student:</strong> ${student_name}</p>
+                        <p style="margin: 5px 0; color: #2c3e50;"><strong>School:</strong> ${school}</p>
+                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Date:</strong> ${dateString}</p>
+                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Period:</strong> ${timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)}</p>
+                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Status:</strong> <span style="color: #e74c3c;">Absent</span></p>
+                    </div>
+                    <p style="color: #34495e; font-size: 16px;">If this absence was planned, no action is required. If you believe there has been an error, please contact your driver or our support team as soon as possible.</p>
+                    <hr style="border: 1px solid #eee; margin: 20px 0;">
+                    <div style="color: #7f8c8d; font-size: 12px; text-align: center;">
+                        <p>This is an automated message from EduRide. Please do not reply to this email.</p>
+                        <p style="margin-top: 15px;">
+                            © ${new Date().getFullYear()} EduRide. All rights reserved.<br>
+                            <a href="https://eduride.com/privacy" style="color: #7f8c8d;">Privacy Policy</a> |
+                            <a href="https://eduride.com/terms" style="color: #7f8c8d;">Terms of Service</a>
+                        </p>
+                    </div>
+                </div>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`Absence notification email sent to ${email} for student ${student_name}`);
+        return true;
+    } catch (error) {
+        console.error("Error sending absence notification email:", error);
+        return false;
+    }
+};
 const addStudent = async (req, res) => {
     const {
         driverId,
@@ -207,7 +377,9 @@ const markAttendance = async (req, res) => {
     }
     try {
         const checkQuery = `
-            SELECT id
+            SELECT id,
+                   morning_ride_status,
+                   afternoon_ride_status
             FROM attendance
             WHERE driver_id = ?
               AND student_id = ?
@@ -216,6 +388,15 @@ const markAttendance = async (req, res) => {
         const checkParams = [driver_id, student_id, date];
         const existingRecord = await executeQuery(checkQuery, checkParams);
 
+        // Store previous ride status if record exists
+        let previousRideStatus = null;
+        if (existingRecord.length > 0) {
+            previousRideStatus = period === 'MORNING'
+                ? existingRecord[0].morning_ride_status
+                : existingRecord[0].afternoon_ride_status;
+        }
+
+        // Update or insert attendance record
         if (existingRecord.length > 0) {
             let updateQuery;
             if (period === 'MORNING') {
@@ -254,6 +435,7 @@ const markAttendance = async (req, res) => {
             await executeQuery(insertQuery, insertParams);
         }
 
+        // Handle parent SMS notification
         const getParentQuery = `
             SELECT phone
             FROM parents p
@@ -263,12 +445,30 @@ const markAttendance = async (req, res) => {
         const parentRes = await executeQuery(getParentQuery, [student_id]);
         if (parentRes.length > 0) {
             const parentPhone = parentRes[0].phone;
-
-            // Send SMS to parent
             const message = `Your child's attendance has been marked for ${period} on ${date}. Attendance status: ${attendance_status}. Ride status: ${ride_status}.`;
             //sendSMS(parentPhone, message);
         }
 
+        if (attendance_status === 'PRESENT') {
+            // Only send pickup/dropoff email if the student is present AND status has changed
+            if ((ride_status === 'PICKED_UP' || ride_status === 'DROPPED') &&
+                (previousRideStatus === null || previousRideStatus !== ride_status)) {
+                try {
+                    await sendRideStatusEmail(student_id, ride_status, period);
+                } catch (emailError) {
+                    console.error("Error when trying to send ride status email:", emailError);
+                }
+            } else {
+                console.log(`No ride status email sent. Previous: ${previousRideStatus}, Current: ${ride_status}`);
+            }
+        } else if (attendance_status === 'ABSENT') {
+            // Send absence notification for absent students
+            try {
+                await sendAbsenceNotificationEmail(student_id, period);
+            } catch (emailError) {
+                console.error("Error when trying to send absence notification email:", emailError);
+            }
+        }
         res.status(200).json({message: "Attendance marked & parent notified successfully"});
 
     } catch (err) {
@@ -303,6 +503,121 @@ const getAttendance = async (req, res) => {
     }
 };
 
+const deleteStudent = async (req, res) => {
+    const { student_id } = req.params;
+
+    if (!student_id) {
+        return res.status(400).json({ error: "Student ID is required" });
+    }
+
+    try {
+        // Start a transaction to ensure data consistency
+        await executeQuery('START TRANSACTION');
+
+        try {
+            // Get student and parent info before deletion
+            const getStudentQuery = `
+                SELECT s.full_name AS student_name, s.school, s.parent_id,
+                       p.email, p.full_name AS parent_name, p.user_id AS parent_user_id
+                FROM students s
+                JOIN parents p ON s.parent_id = p.id
+                WHERE s.id = ?
+            `;
+            const studentInfo = await executeQuery(getStudentQuery, [student_id]);
+
+            if (studentInfo.length === 0) {
+                await executeQuery('ROLLBACK');
+                return res.status(404).json({ error: "Student not found" });
+            }
+
+            // Delete related payment records
+            const deletePaymentsQuery = 'DELETE FROM payments WHERE student_id = ?';
+            await executeQuery(deletePaymentsQuery, [student_id]);
+
+            // Delete related attendance records
+            const deleteAttendanceQuery = 'DELETE FROM attendance WHERE student_id = ?';
+            await executeQuery(deleteAttendanceQuery, [student_id]);
+
+            // Delete the student record
+            const deleteStudentQuery = 'DELETE FROM students WHERE id = ?';
+            await executeQuery(deleteStudentQuery, [student_id]);
+
+            // Check if parent has other children
+            const parentId = studentInfo[0].parent_id;
+            const checkOtherChildrenQuery = 'SELECT COUNT(*) as children_count FROM students WHERE parent_id = ?';
+            const childrenResult = await executeQuery(checkOtherChildrenQuery, [parentId]);
+
+            // If parent has no other children, delete parent and associated user account
+            if (childrenResult[0].children_count === 0) {
+                const deleteParentQuery = 'DELETE FROM parents WHERE id = ?';
+                await executeQuery(deleteParentQuery, [parentId]);
+
+                const deleteUserQuery = 'DELETE FROM users WHERE id = ?';
+                await executeQuery(deleteUserQuery, [studentInfo[0].parent_user_id]);
+
+                console.log(`Parent ${parentId} and user ${studentInfo[0].parent_user_id} deleted as they have no more children in the system`);
+            }
+
+            // Commit the transaction
+            await executeQuery('COMMIT');
+
+            // Send confirmation email to parent
+            const { email, parent_name, student_name, school } = studentInfo[0];
+
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: edu_ride_email,
+                    pass: edu_ride_password
+                }
+            });
+
+            const mailOptions = {
+                from: `"EduRide" <${edu_ride_email}>`,
+                to: email,
+                subject: 'Student Transportation Service Termination',
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+                        <div style="text-align: center; margin: 20px 0;">
+                            <h1 style="color: #2c3e50; margin: 0;">Service Termination Notice</h1>
+                            <p style="color: #7f8c8d;">EduRide - Your Trusted School Transportation Partner</p>
+                        </div>
+                        <p style="color: #34495e; font-size: 16px;">Dear ${parent_name},</p>
+                        <p style="color: #34495e; font-size: 16px;">This is to confirm that transportation services for your child, ${student_name}, have been terminated.</p>
+                        <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 5px; border-left: 4px solid #95a5a6;">
+                            <p style="margin: 5px 0; color: #2c3e50;"><strong>Student:</strong> ${student_name}</p>
+                            <p style="margin: 5px 0; color: #2c3e50;"><strong>School:</strong> ${school}</p>
+                            <p style="margin: 5px 0; color: #2c3e50;"><strong>Effective Date:</strong> ${new Date().toLocaleDateString()}</p>
+                        </div>
+                        <p style="color: #34495e; font-size: 16px;">If you have any questions or require further assistance, please contact our support team.</p>
+                        <hr style="border: 1px solid #eee; margin: 20px 0;">
+                        <div style="color: #7f8c8d; font-size: 12px; text-align: center;">
+                            <p>This is an automated message from EduRide. Please do not reply to this email.</p>
+                            <p style="margin-top: 15px;">
+                                © ${new Date().getFullYear()} EduRide. All rights reserved.<br>
+                                <a href="https://eduride.com/privacy" style="color: #7f8c8d;">Privacy Policy</a> |
+                                <a href="https://eduride.com/terms" style="color: #7f8c8d;">Terms of Service</a>
+                            </p>
+                        </div>
+                    </div>
+                `
+            };
+
+            await transporter.sendMail(mailOptions);
+
+            res.status(200).json({ message: "Student deleted successfully and parent notified" });
+
+        } catch (error) {
+            // Rollback in case of error
+            await executeQuery('ROLLBACK');
+            throw error;
+        }
+    } catch (err) {
+        console.error("Error in deleteStudent:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 const visualizePayments = async (req, res) => {
     const {driver_id} = req.params;
 
@@ -312,7 +627,7 @@ const visualizePayments = async (req, res) => {
 
     try {
         const query = `
-            SELECT s.full_name AS student_name, p.month, p.due_date, p.status AS payment_status, p.amount ,s.id
+            SELECT s.full_name AS student_name, p.month, p.due_date, p.status AS payment_status, p.amount, s.id
             FROM payments p
                      JOIN students s ON p.student_id = s.id
             WHERE s.driver_id = ?
@@ -482,11 +797,11 @@ const notifySpecificPerson = async (req, res) => {
     }
 };
 const updatePaymentStatus = async (req, res) => {
-    const { student_id } = req.params;
-    const { status } = req.body;
+    const {student_id} = req.params;
+    const {status} = req.body;
 
     if (!student_id || !status) {
-        return res.status(400).json({ error: "Student ID and status are required" });
+        return res.status(400).json({error: "Student ID and status are required"});
     }
 
     try {
@@ -497,10 +812,10 @@ const updatePaymentStatus = async (req, res) => {
         `;
         await executeQuery(query, [status, student_id]);
 
-        res.status(200).json({ message: "Payment status updated successfully" });
+        res.status(200).json({message: "Payment status updated successfully"});
     } catch (err) {
         console.error("Error in updatePaymentStatus:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({error: "Internal Server Error"});
     }
 };
 
@@ -513,5 +828,6 @@ module.exports = {
     visualizePayments,
     sendDuePaymentEmails,
     notifySpecificPerson,
-    updatePaymentStatus
+    updatePaymentStatus,
+    deleteStudent
 };

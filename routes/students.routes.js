@@ -8,7 +8,8 @@ const {
     visualizePayments,
     sendDuePaymentEmails,
     notifySpecificPerson,
-    updatePaymentStatus
+    updatePaymentStatus,
+    deleteStudent
 } = require('../controllers/students.controller');
 
 router.post('/add-student', addStudent);
@@ -19,5 +20,6 @@ router.get('/visualize-payments/:driver_id', visualizePayments);
 router.get('/send-due-payment-emails/:driver_id', sendDuePaymentEmails);
 router.get('/notify-specific-person/:driver_id/:student_id', notifySpecificPerson);
 router.put('/update-payment-status/:student_id', updatePaymentStatus);
+router.delete('/delete-student/:student_id', deleteStudent);
 
 module.exports = router;

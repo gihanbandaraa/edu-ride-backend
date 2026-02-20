@@ -1212,7 +1212,7 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <CollationName>utf8mb4_general_ci</CollationName>
     </table>
     <column id="345" parent="339" name="id">
-      <AutoIncrement>1</AutoIncrement>
+      <AutoIncrement>3</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint(20) unsigned|0s</StoredType>
@@ -1231,14 +1231,10 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <StoredType>date|0s</StoredType>
     </column>
     <column id="349" parent="339" name="morning_attendance_status">
-      <DefaultExpression>&apos;ABSENT&apos;</DefaultExpression>
-      <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>enum(&apos;PRESENT&apos;, &apos;ABSENT&apos;)|0e</StoredType>
     </column>
     <column id="350" parent="339" name="afternoon_attendance_status">
-      <DefaultExpression>&apos;ABSENT&apos;</DefaultExpression>
-      <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>enum(&apos;PRESENT&apos;, &apos;ABSENT&apos;)|0e</StoredType>
     </column>
