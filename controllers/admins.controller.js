@@ -25,7 +25,7 @@ const adminLogin = async (req, res) => {
 const getDriversDetails = async (req, res) => {
     try {
         const query = `
-            SELECT d.*, u.role, u.verification_status
+            SELECT d.*, u.role, u.verification_status, u.email, u.name AS account_name, u.created_at AS registered_at
             FROM drivers d
                      JOIN users u ON d.user_id = u.id
             WHERE u.role = 'driver'
@@ -211,9 +211,54 @@ const rejectDriver = async (req, res) => {
     }
 };
 
+const deleteDriver = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const getUserQuery = `SELECT email, name as full_name FROM users WHERE id = ?`;
+        const userResult = await executeQuery(getUserQuery, [userId]);
+
+        if (userResult.length === 0) {
+            return res.status(404).json({ error: "Driver not found" });
+        }
+
+        const { email, full_name } = userResult[0];
+
+        // Deleting from users cascades to drivers, students assigned to this driver
+        // are handled by ON DELETE SET NULL on students.driver_id
+        await executeQuery(`DELETE FROM users WHERE id = ?`, [userId]);
+
+        const mailOptions = {
+            from: `"EduRide" <${process.env.EDU_RIDE_EMAIL}>`,
+            to: email,
+            subject: 'Your EduRide Account Has Been Removed',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+                    <h1 style="color: #2c3e50;">Account Removed</h1>
+                    <p>Dear ${full_name},</p>
+                    <p>Your EduRide driver account has been permanently removed by an administrator.</p>
+                    <p>If you believe this was done in error, please contact our support team.</p>
+                    <hr style="border: 1px solid #eee; margin: 20px 0;">
+                    <p style="color: #7f8c8d; font-size: 12px;">© ${new Date().getFullYear()} EduRide. All rights reserved.</p>
+                </div>
+            `
+        };
+
+        transporter.sendMail(mailOptions, (error) => {
+            if (error) console.error("Error sending account removal email:", error);
+        });
+
+        res.status(200).json({ message: "Driver deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting driver:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 module.exports = {
     adminLogin,
     getDriversDetails,
     verifyDriver,
-    rejectDriver
+    rejectDriver,
+    deleteDriver
 };

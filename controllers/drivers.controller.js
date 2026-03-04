@@ -220,4 +220,45 @@ const getTripDetails = async (req, res) => {
 };
 
 
-module.exports = {addDriver, getDriverDetails, getTripSummaries, getTripDetails};
+const updateDriverProfile = async (req, res) => {
+    const {userId} = req.params;
+    const {phone_num, address} = req.body;
+
+    if (!userId) {
+        return res.status(400).json({error: "User ID is required"});
+    }
+    if (!phone_num && !address) {
+        return res.status(400).json({error: "At least one field (phone_num or address) is required"});
+    }
+
+    const fields = [];
+    const values = [];
+    if (phone_num) { fields.push('phone_num = ?'); values.push(phone_num); }
+    if (address)   { fields.push('address = ?');   values.push(address); }
+    values.push(userId);
+
+    const query = `UPDATE drivers SET ${fields.join(', ')} WHERE user_id = ?`;
+
+    try {
+        await executeQuery(query, values);
+        res.status(200).json({message: "Profile updated successfully"});
+    } catch (error) {
+        console.error("Error updating driver profile:", error);
+        res.status(500).json({error: "Internal Server Error"});
+    }
+};
+
+const updateDriverSelfie = async (req, res) => {
+    const {userId} = req.params;
+    if (!req.file) return res.status(400).json({error: 'No file uploaded'});
+    const selfie_url = `uploads/${req.file.filename}`;
+    try {
+        await executeQuery('UPDATE drivers SET selfie_url = ? WHERE user_id = ?', [selfie_url, userId]);
+        res.status(200).json({message: 'Profile photo updated', selfie_url});
+    } catch (error) {
+        console.error('Error updating selfie:', error);
+        res.status(500).json({error: 'Internal Server Error'});
+    }
+};
+
+module.exports = {addDriver, getDriverDetails, getTripSummaries, getTripDetails, updateDriverProfile, updateDriverSelfie};
