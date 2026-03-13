@@ -85,30 +85,41 @@ const sendRideStatusEmail = async (studentId, rideStatus, period) => {
             to: email,
             subject: subject,
             html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
-                    <div style="text-align: center; margin: 20px 0;">
-                        <h1 style="color: #2c3e50; margin: 0;">${heading}</h1>
-                        <p style="color: #7f8c8d;">EduRide - Your Trusted School Transportation Partner</p>
-                    </div>
-                    <p style="color: #34495e; font-size: 16px;">Dear ${parent_name},</p>
-                    <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 5px; border-left: 4px solid ${accentColor};">
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>${content}</strong></p>
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Student:</strong> ${student_name}</p>
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>School:</strong> ${school}</p>
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Time:</strong> ${timeString}</p>
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Period:</strong> ${timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)}</p>
-                    </div>
-                    <p style="color: #34495e; font-size: 16px;">This is an automated notification to keep you informed about your child's transportation status.</p>
-                    <hr style="border: 1px solid #eee; margin: 20px 0;">
-                    <div style="color: #7f8c8d; font-size: 12px; text-align: center;">
-                        <p>This is an automated message from EduRide. Please do not reply to this email.</p>
-                        <p style="margin-top: 15px;">
-                            © ${new Date().getFullYear()} EduRide. All rights reserved.<br>
-                            <a href="https://eduride.com/privacy" style="color: #7f8c8d;">Privacy Policy</a> |
-                            <a href="https://eduride.com/terms" style="color: #7f8c8d;">Terms of Service</a>
-                        </p>
-                    </div>
-                </div>
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f4f6f9;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f9;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+        <!-- Header -->
+        <tr><td style="background-color:#1a2340;padding:28px 40px;border-radius:8px 8px 0 0;">
+          <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:0.5px;">EduRide</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#8a9bb8;letter-spacing:0.3px;">School Transportation Management</p>
+        </td></tr>
+        <!-- Body -->
+        <tr><td style="background-color:#ffffff;padding:36px 40px;">
+          <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#1a2340;">${heading}</p>
+          <p style="margin:0 0 24px;font-size:14px;color:#64748b;">Transportation Status Update</p>
+          <p style="margin:0 0 20px;font-size:14px;color:#374151;">Dear <strong>${parent_name}</strong>,</p>
+          <p style="margin:0 0 24px;font-size:14px;color:#374151;line-height:1.6;">${content}</p>
+          <!-- Details Table -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;border-radius:6px;overflow:hidden;margin-bottom:24px;">
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;width:40%;">Student</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;font-weight:700;">${student_name}</td></tr>
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">School</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;">${school}</td></tr>
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Period</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;">${timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)}</td></tr>
+            <tr><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Time</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;">${timeString}</td></tr>
+          </table>
+          <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">This is an automated notification from EduRide. Please do not reply to this email.</p>
+        </td></tr>
+        <!-- Footer -->
+        <tr><td style="background-color:#f8fafc;padding:20px 40px;border-top:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+          <p style="margin:0;font-size:12px;color:#94a3b8;text-align:center;">&copy; ${new Date().getFullYear()} EduRide. All rights reserved.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>
             `
         };
         // Use await to properly handle errors and ensure email is sent before function completes
@@ -159,31 +170,42 @@ const sendAbsenceNotificationEmail = async (studentId, period) => {
             to: email,
             subject: `Absence Notification - ${student_name} (${dateString})`,
             html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
-                    <div style="text-align: center; margin: 20px 0;">
-                        <h1 style="color: #2c3e50; margin: 0;">Student Absence Notification</h1>
-                        <p style="color: #7f8c8d;">EduRide - Your Trusted School Transportation Partner</p>
-                    </div>
-                    <p style="color: #34495e; font-size: 16px;">Dear ${parent_name},</p>
-                    <p style="color: #34495e; font-size: 16px;">This is to inform you that your child, ${student_name}, has been marked as absent for today's ${timeOfDay} school transport.</p>
-                    <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 5px; border-left: 4px solid #e74c3c;">
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Student:</strong> ${student_name}</p>
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>School:</strong> ${school}</p>
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Date:</strong> ${dateString}</p>
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Period:</strong> ${timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)}</p>
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Status:</strong> <span style="color: #e74c3c;">Absent</span></p>
-                    </div>
-                    <p style="color: #34495e; font-size: 16px;">If this absence was planned, no action is required. If you believe there has been an error, please contact your driver or our support team as soon as possible.</p>
-                    <hr style="border: 1px solid #eee; margin: 20px 0;">
-                    <div style="color: #7f8c8d; font-size: 12px; text-align: center;">
-                        <p>This is an automated message from EduRide. Please do not reply to this email.</p>
-                        <p style="margin-top: 15px;">
-                            © ${new Date().getFullYear()} EduRide. All rights reserved.<br>
-                            <a href="https://eduride.com/privacy" style="color: #7f8c8d;">Privacy Policy</a> |
-                            <a href="https://eduride.com/terms" style="color: #7f8c8d;">Terms of Service</a>
-                        </p>
-                    </div>
-                </div>
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f4f6f9;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f9;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+        <!-- Header -->
+        <tr><td style="background-color:#1a2340;padding:28px 40px;border-radius:8px 8px 0 0;">
+          <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:0.5px;">EduRide</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#8a9bb8;letter-spacing:0.3px;">School Transportation Management</p>
+        </td></tr>
+        <!-- Body -->
+        <tr><td style="background-color:#ffffff;padding:36px 40px;">
+          <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#1a2340;">Absence Notification</p>
+          <p style="margin:0 0 24px;font-size:14px;color:#64748b;">Transport Attendance Update</p>
+          <p style="margin:0 0 20px;font-size:14px;color:#374151;">Dear <strong>${parent_name}</strong>,</p>
+          <p style="margin:0 0 24px;font-size:14px;color:#374151;line-height:1.6;">This is to inform you that <strong>${student_name}</strong> has been marked as absent for the ${timeOfDay} school transport on ${dateString}.</p>
+          <!-- Details Table -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;border-radius:6px;overflow:hidden;margin-bottom:24px;">
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;width:40%;">Student</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;font-weight:700;">${student_name}</td></tr>
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">School</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;">${school}</td></tr>
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Date</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;">${dateString}</td></tr>
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Period</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;">${timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1)}</td></tr>
+            <tr><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Status</td><td style="padding:12px 16px;font-size:13px;color:#c0392b;font-weight:700;">Absent</td></tr>
+          </table>
+          <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">If this absence was planned, no action is required. If you believe this is an error, please contact your driver directly.</p>
+        </td></tr>
+        <!-- Footer -->
+        <tr><td style="background-color:#f8fafc;padding:20px 40px;border-top:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+          <p style="margin:0;font-size:12px;color:#94a3b8;text-align:center;">&copy; ${new Date().getFullYear()} EduRide. All rights reserved.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>
             `
         };
 
@@ -273,41 +295,50 @@ const addStudent = async (req, res) => {
             const mailOptions = {
                 from: `"EduRide" <${edu_ride_email}>`,
                 to: email,
-                subject: 'Welcome to EduRide - Your Login Credentials',
+                subject: 'Welcome to EduRide - Your Account Details',
                 headers: {
                     'X-Priority': '1',
                     'X-MSMail-Priority': 'High',
                     'Importance': 'high'
                 },
                 html: `
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
-                        <div style="text-align: center; margin: 20px 0;">
-                            <h1 style="color: #2c3e50; margin: 0;">Welcome to EduRide</h1>
-                            <p style="color: #7f8c8d;">Your Trusted School Transportation Partner</p>
-                        </div>
-                        <p style="color: #34495e; font-size: 16px;">Dear ${full_name},</p>
-                        <p style="color: #34495e; font-size: 16px;">Your EduRide account has been successfully created. Below are your login credentials:</p>
-                        <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 5px; border-left: 4px solid #3498db;">
-                            <p style="margin: 5px 0; color: #2c3e50;"><strong>Username:</strong> ${username}</p>
-                            <p style="margin: 5px 0; color: #2c3e50;"><strong>Password:</strong> ${password}</p>
-                        </div>
-                        <div style="background-color: #fff3cd; padding: 15px; margin: 20px 0; border-radius: 5px;">
-                            <p style="margin: 0; color: #856404;"><strong>Important:</strong> For security reasons, please change your password after your first login.</p>
-                        </div>
-                        <div style="margin: 30px 0; text-align: center;">
-                            <a href="your-login-url" style="background-color: #3498db; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block;">Login to Your Account</a>
-                        </div>
-                        <hr style="border: 1px solid #eee; margin: 20px 0;">
-                        <div style="color: #7f8c8d; font-size: 12px; text-align: center;">
-                            <p>This is an automated message from EduRide. Please do not reply to this email.</p>
-                            <p>If you did not request this account, please contact our support team immediately.</p>
-                            <p style="margin-top: 15px;">
-                                © ${new Date().getFullYear()} EduRide. All rights reserved.<br>
-                                <a href="your-unsubscribe-url" style="color: #7f8c8d;">Unsubscribe</a> |
-                                <a href="your-privacy-policy-url" style="color: #7f8c8d;">Privacy Policy</a>
-                            </p>
-                        </div>
-                    </div>
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f4f6f9;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f9;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+        <!-- Header -->
+        <tr><td style="background-color:#1a2340;padding:28px 40px;border-radius:8px 8px 0 0;">
+          <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:0.5px;">EduRide</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#8a9bb8;letter-spacing:0.3px;">School Transportation Management</p>
+        </td></tr>
+        <!-- Body -->
+        <tr><td style="background-color:#ffffff;padding:36px 40px;">
+          <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#1a2340;">Welcome to EduRide</p>
+          <p style="margin:0 0 24px;font-size:14px;color:#64748b;">Your account has been successfully created</p>
+          <p style="margin:0 0 20px;font-size:14px;color:#374151;">Dear <strong>${full_name}</strong>,</p>
+          <p style="margin:0 0 24px;font-size:14px;color:#374151;line-height:1.6;">Your EduRide parent account has been created. Please find your login credentials below.</p>
+          <!-- Credentials Table -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;border-radius:6px;overflow:hidden;margin-bottom:20px;">
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;width:40%;">Username</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;font-weight:700;">${username}</td></tr>
+            <tr><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Password</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;font-weight:700;">${password}</td></tr>
+          </table>
+          <!-- Security notice -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#fefce8;border-left:3px solid #ca8a04;border-radius:0 4px 4px 0;margin-bottom:24px;">
+            <tr><td style="padding:12px 16px;font-size:13px;color:#92400e;line-height:1.5;"><strong>Security Notice:</strong> Please change your password after your first login to keep your account secure.</td></tr>
+          </table>
+          <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">If you did not expect this email, please contact our support team immediately.</p>
+        </td></tr>
+        <!-- Footer -->
+        <tr><td style="background-color:#f8fafc;padding:20px 40px;border-top:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+          <p style="margin:0;font-size:12px;color:#94a3b8;text-align:center;">&copy; ${new Date().getFullYear()} EduRide. All rights reserved.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>
                 `
             };
             await transporter.sendMail(mailOptions);
@@ -678,34 +709,43 @@ const sendDuePaymentEmails = async (req, res) => {
             const mailOptions = {
                 from: `"EduRide" <${edu_ride_email}>`,
                 to: payment.email,
-                subject: 'Due Payment Reminder',
+                subject: `Payment Due - ${payment.student_name}`,
                 html: `
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
-                        <div style="text-align: center; margin: 20px 0;">
-                            <h1 style="color: #2c3e50; margin: 0;">Payment Due Reminder</h1>
-                            <p style="color: #7f8c8d;">EduRide - Your Trusted School Transportation Partner</p>
-                        </div>
-                        <p style="color: #34495e; font-size: 16px;">Dear ${payment.parent_name},</p>
-                        <p style="color: #34495e; font-size: 16px;">This is a reminder that a payment for your child, ${payment.student_name}, is due. Please find the details below:</p>
-                        <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 5px; border-left: 4px solid #e74c3c;">
-                            <p style="margin: 5px 0; color: #2c3e50;"><strong>Amount Due:</strong> Rs${payment.amount}</p>
-                            <p style="margin: 5px 0; color: #2c3e50;"><strong>Due Date:</strong> ${payment.due_date}</p>
-                        </div>
-                        <p style="color: #34495e; font-size: 16px;">Please make the payment at your earliest convenience to avoid any disruption in service.</p>
-                        <div style="margin: 30px 0; text-align: center;">
-                            <a href="your-payment-url" style="background-color: #e74c3c; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block;">Make Payment</a>
-                        </div>
-                        <hr style="border: 1px solid #eee; margin: 20px 0;">
-                        <div style="color: #7f8c8d; font-size: 12px; text-align: center;">
-                            <p>This is an automated message from EduRide. Please do not reply to this email.</p>
-                            <p>If you have already made the payment, please disregard this message.</p>
-                            <p style="margin-top: 15px;">
-                                © ${new Date().getFullYear()} EduRide. All rights reserved.<br>
-                                <a href="your-unsubscribe-url" style="color: #7f8c8d;">Unsubscribe</a> |
-                                <a href="your-privacy-policy-url" style="color: #7f8c8d;">Privacy Policy</a>
-                            </p>
-                        </div>
-                    </div>
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f4f6f9;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f9;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+        <!-- Header -->
+        <tr><td style="background-color:#1a2340;padding:28px 40px;border-radius:8px 8px 0 0;">
+          <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:0.5px;">EduRide</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#8a9bb8;letter-spacing:0.3px;">School Transportation Management</p>
+        </td></tr>
+        <!-- Body -->
+        <tr><td style="background-color:#ffffff;padding:36px 40px;">
+          <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#1a2340;">Payment Reminder</p>
+          <p style="margin:0 0 24px;font-size:14px;color:#64748b;">Action Required</p>
+          <p style="margin:0 0 20px;font-size:14px;color:#374151;">Dear <strong>${payment.parent_name}</strong>,</p>
+          <p style="margin:0 0 24px;font-size:14px;color:#374151;line-height:1.6;">This is a reminder that a transport fee payment for <strong>${payment.student_name}</strong> is currently due.</p>
+          <!-- Details Table -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;border-radius:6px;overflow:hidden;margin-bottom:24px;">
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;width:40%;">Student</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;font-weight:700;">${payment.student_name}</td></tr>
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Amount Due</td><td style="padding:12px 16px;font-size:13px;color:#c0392b;font-weight:700;">Rs. ${payment.amount}</td></tr>
+            <tr><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Due Date</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;">${payment.due_date}</td></tr>
+          </table>
+          <p style="margin:0 0 24px;font-size:13px;color:#64748b;line-height:1.6;">Please make the payment at your earliest convenience to avoid any disruption in your child's transportation service.</p>
+          <p style="margin:0;font-size:13px;color:#64748b;">If you have already made the payment, please disregard this message.</p>
+        </td></tr>
+        <!-- Footer -->
+        <tr><td style="background-color:#f8fafc;padding:20px 40px;border-top:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+          <p style="margin:0;font-size:12px;color:#94a3b8;text-align:center;">&copy; ${new Date().getFullYear()} EduRide. All rights reserved.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>
                 `
             };
 
@@ -757,34 +797,43 @@ const notifySpecificPerson = async (req, res) => {
         const mailOptions = {
             from: `"EduRide" <${edu_ride_email}>`,
             to: payment.email,
-            subject: 'Due Payment Reminder',
+            subject: `Payment Due - ${payment.student_name}`,
             html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
-                    <div style="text-align: center; margin: 20px 0;">
-                        <h1 style="color: #2c3e50; margin: 0;">Payment Due Reminder</h1>
-                        <p style="color: #7f8c8d;">EduRide - Your Trusted School Transportation Partner</p>
-                    </div>
-                    <p style="color: #34495e; font-size: 16px;">Dear ${payment.parent_name},</p>
-                    <p style="color: #34495e; font-size: 16px;">This is a reminder that a payment for your child, ${payment.student_name}, is due. Please find the details below:</p>
-                    <div style="background-color: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 5px; border-left: 4px solid #e74c3c;">
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Amount Due:</strong> Rs${payment.amount}</p>
-                        <p style="margin: 5px 0; color: #2c3e50;"><strong>Due Date:</strong> ${payment.due_date}</p>
-                    </div>
-                    <p style="color: #34495e; font-size: 16px;">Please make the payment at your earliest convenience to avoid any disruption in service.</p>
-                    <div style="margin: 30px 0; text-align: center;">
-                        <a href="your-payment-url" style="background-color: #e74c3c; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block;">Make Payment</a>
-                    </div>
-                    <hr style="border: 1px solid #eee; margin: 20px 0;">
-                    <div style="color: #7f8c8d; font-size: 12px; text-align: center;">
-                        <p>This is an automated message from EduRide. Please do not reply to this email.</p>
-                        <p>If you have already made the payment, please disregard this message.</p>
-                        <p style="margin-top: 15px;">
-                            © ${new Date().getFullYear()} EduRide. All rights reserved.<br>
-                            <a href="your-unsubscribe-url" style="color: #7f8c8d;">Unsubscribe</a> |
-                            <a href="your-privacy-policy-url" style="color: #7f8c8d;">Privacy Policy</a>
-                        </p>
-                    </div>
-                </div>
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f4f6f9;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f9;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+        <!-- Header -->
+        <tr><td style="background-color:#1a2340;padding:28px 40px;border-radius:8px 8px 0 0;">
+          <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:0.5px;">EduRide</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#8a9bb8;letter-spacing:0.3px;">School Transportation Management</p>
+        </td></tr>
+        <!-- Body -->
+        <tr><td style="background-color:#ffffff;padding:36px 40px;">
+          <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#1a2340;">Payment Reminder</p>
+          <p style="margin:0 0 24px;font-size:14px;color:#64748b;">Action Required</p>
+          <p style="margin:0 0 20px;font-size:14px;color:#374151;">Dear <strong>${payment.parent_name}</strong>,</p>
+          <p style="margin:0 0 24px;font-size:14px;color:#374151;line-height:1.6;">This is a reminder that a transport fee payment for <strong>${payment.student_name}</strong> is currently due.</p>
+          <!-- Details Table -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;border-radius:6px;overflow:hidden;margin-bottom:24px;">
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;width:40%;">Student</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;font-weight:700;">${payment.student_name}</td></tr>
+            <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Amount Due</td><td style="padding:12px 16px;font-size:13px;color:#c0392b;font-weight:700;">Rs. ${payment.amount}</td></tr>
+            <tr><td style="padding:12px 16px;font-size:13px;color:#64748b;font-weight:600;">Due Date</td><td style="padding:12px 16px;font-size:13px;color:#1a2340;">${payment.due_date}</td></tr>
+          </table>
+          <p style="margin:0 0 24px;font-size:13px;color:#64748b;line-height:1.6;">Please make the payment at your earliest convenience to avoid any disruption in your child's transportation service.</p>
+          <p style="margin:0;font-size:13px;color:#64748b;">If you have already made the payment, please disregard this message.</p>
+        </td></tr>
+        <!-- Footer -->
+        <tr><td style="background-color:#f8fafc;padding:20px 40px;border-top:1px solid #e2e8f0;border-radius:0 0 8px 8px;">
+          <p style="margin:0;font-size:12px;color:#94a3b8;text-align:center;">&copy; ${new Date().getFullYear()} EduRide. All rights reserved.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>
             `
         };
 
